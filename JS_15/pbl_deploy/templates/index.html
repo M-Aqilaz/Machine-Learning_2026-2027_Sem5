@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Deteksi Berita Hoaks & Valid</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hero-card { border-radius: 16px; border: none; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .btn-predict { background-color: #0d6efd; padding: 12px 28px; font-weight: 600; border-radius: 8px; }
+        .badge-result { font-size: 1.25rem; padding: 10px 24px; border-radius: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card hero-card p-4 p-md-5 bg-white">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold text-dark">Deteksi Berita Hoaks vs Valid</h2>
+                        <p class="text-muted">Aplikasi Machine Learning Pipeline Klasifikasi Berita Indonesia (Proyek PBL)</p>
+                    </div>
+
+                    <form action="/predict" method="post">
+                        <div class="mb-3">
+                            <label for="news_text" class="form-label fw-semibold">Masukkan Teks atau Judul Berita:</label>
+                            <textarea class="form-control" id="news_text" name="news_text" rows="5" placeholder="Salin paragraf atau kalimat berita di sini..." required>{{ news_text if news_text else '' }}</textarea>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-predict text-white">Analisis Berita</button>
+                        </div>
+                    </form>
+
+                    {% if error %}
+                    <div class="alert alert-danger mt-4" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+
+                    {% if label %}
+                    <div class="card mt-4 border-0 bg-light p-4 text-center">
+                        <h5 class="text-muted mb-2">Hasil Klasifikasi:</h5>
+                        <div>
+                            {% if status_color == 'success' %}
+                            <span class="badge bg-success badge-result">✅ {{ label }}</span>
+                            {% else %}
+                            <span class="badge bg-danger badge-result">⚠️ {{ label }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="mt-3">
+                            <p class="mb-1 fw-semibold">Tingkat Keyakinan Model: <span class="text-primary">{{ confidence }}%</span></p>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ confidence }}%;" aria-valuenow="{{ confidence }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <small class="text-muted mt-2 d-block">Nilai Probabilitas Output: {{ prob }}</small>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="mt-4 pt-3 border-top text-center text-muted">
+                        <small>Dikembangkan menggunakan TF-IDF Vectorizer + Deep Neural Network (MLOps Deployment Pipeline)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
